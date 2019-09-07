@@ -13,6 +13,8 @@ describe('PingController', async () => {
   );
   console.log(password);
 
+
+
   // before('setupApplication', async () => {
   //   ({app, client} = await setupApplication());
   // });

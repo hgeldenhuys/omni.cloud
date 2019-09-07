@@ -1,13 +1,13 @@
 import {model, property, belongsTo} from '@loopback/repository';
-import {BaseEntity} from './base-entity.model';
 import {Tenant, TenantWithRelations} from './tenant.model';
 import {User, UserWithRelations} from './user.model';
 import {Role, RoleWithRelations} from './role.model';
+import {UserModifiableEntity} from './user-modifiable-entity.model';
 
 @model({
   name: 'user_tenants',
 })
-export class UserTenant extends BaseEntity {
+export class UserTenant extends UserModifiableEntity {
   @property({
     type: 'number',
     id: true,

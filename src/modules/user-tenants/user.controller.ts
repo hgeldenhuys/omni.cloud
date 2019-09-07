@@ -40,7 +40,7 @@ export class UserController {
     },
   })
   async create(@requestBody() user: User): Promise<User> {
-    return await this.userRepository.create(user);
+    return this.userRepository.create(user);
   }
 
   @authenticate(STRATEGY.BEARER)
@@ -60,7 +60,7 @@ export class UserController {
   async count(
     @param.query.object('where', getWhereSchemaFor(User)) where?: Where<User>,
   ): Promise<Count> {
-    return await this.userRepository.count(where);
+    return this.userRepository.count(where);
   }
 
   @authenticate(STRATEGY.BEARER)
@@ -85,7 +85,7 @@ export class UserController {
     @param.query.object('filter', getFilterSchemaFor(User))
     filter?: Filter<User>,
   ): Promise<User[]> {
-    return await this.userRepository.find(filter);
+    return this.userRepository.find(filter);
   }
 
   @authenticate(STRATEGY.BEARER)
@@ -106,7 +106,7 @@ export class UserController {
     @requestBody() user: User,
     @param.query.object('where', getWhereSchemaFor(User)) where?: Where<User>,
   ): Promise<Count> {
-    return await this.userRepository.updateAll(user, where);
+    return this.userRepository.updateAll(user, where);
   }
 
   @authenticate(STRATEGY.BEARER)
@@ -124,7 +124,7 @@ export class UserController {
     },
   })
   async findById(@param.path.number('id') id: number): Promise<User> {
-    return await this.userRepository.findById(id);
+    return this.userRepository.findById(id);
   }
 
   @authenticate(STRATEGY.BEARER)

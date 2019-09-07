@@ -3,12 +3,14 @@ import {BelongsToAccessor, repository} from '@loopback/repository';
 
 import {PgdbDataSource} from '../datasources';
 import {Role, Tenant, User, UserTenant, UserTenantRelations} from '../models';
-import {DefaultSoftCrudRepository} from './default-soft-crud.repository.base';
 import {RoleRepository} from './role.repository';
 import {TenantRepository} from './tenant.repository';
 import {UserRepository} from './user.repository';
+import {AuthenticationBindings} from 'loopback4-authentication';
+import {AuthUser} from '../modules/auth';
+import {DefaultUserModifyCrudRepository} from './default-user-modify-crud.repository.base';
 
-export class UserTenantRepository extends DefaultSoftCrudRepository<
+export class UserTenantRepository extends DefaultUserModifyCrudRepository<
   UserTenant,
   typeof UserTenant.prototype.id,
   UserTenantRelations
@@ -23,14 +25,16 @@ export class UserTenantRepository extends DefaultSoftCrudRepository<
 
   constructor(
     @inject('datasources.pgdb') dataSource: PgdbDataSource,
+    @inject.getter(AuthenticationBindings.CURRENT_USER)
+      protected readonly getCurrentUser: Getter<AuthUser | undefined>,
     @repository.getter(TenantRepository)
-    tenantRepositoryGetter: Getter<TenantRepository>,
+      tenantRepositoryGetter: Getter<TenantRepository>,
     @repository.getter(UserRepository)
-    userRepositoryGetter: Getter<UserRepository>,
+      userRepositoryGetter: Getter<UserRepository>,
     @repository.getter(RoleRepository)
-    roleRepositoryGetter: Getter<RoleRepository>,
+      roleRepositoryGetter: Getter<RoleRepository>,
   ) {
-    super(UserTenant, dataSource);
+    super(UserTenant, dataSource, getCurrentUser);
 
     this.tenant = this.createBelongsToAccessorFor(
       'tenantId',
