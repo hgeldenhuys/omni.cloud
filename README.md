@@ -75,8 +75,8 @@ Say the application you are developing is named 'To Do List'. Change as below.
 - package.json and package-lock.json - Replace loopback4-starter with to-do-list in entire file. Update description.
 - public/index.html - Update title tag and h1 tag inside body as per your app name.
 - src/application.ts - Rename class to ToDoListApplication and all its references. If you are using VSCode, select the class name, press F2 and then rename it. This will update all its references as well.
-- src/index.ts - Replace all refences of Loopback4StarterApplication with ToDoListApplication.
-- src/\_\_tests\_\_/\*\* - Replace all refences of Loopback4StarterApplication with ToDoListApplication.
+- src/index.ts - Replace all refences of OmniCloudApplication with ToDoListApplication.
+- src/\_\_tests\_\_/\*\* - Replace all refences of OmniCloudApplication with ToDoListApplication.
 - Update README.md with details of your application
 - Update CONTRIBUTING.md with details as per your application.
 
@@ -171,7 +171,7 @@ You can try out only the unsecured APIs here, like auth/login. The secure endpoi
 - Tenant types - Customer, Application (Umbrella Tenant for super admin work).
 - Every user will need be associated to a tenant in order to access the application.
 - User tenant has a m:n relationship, user_tenants table is the link table for the same.
-- Every user will have a role associated for every tenant it belongs to, role_id in user_tenants table.
+- Every user will have a role associated for every tenant it belongs to, roleId in user_tenants table.
 - Every role has associated permissions.
 - Each user may have some extra permissions (allowed or denied) per tenant over and above its role, user_tenant_permissions table takes care of it.
 
@@ -192,7 +192,7 @@ There are two different strategies of authentication used here.
 
   _The front end application will be mostly using this strategy._
 
-- **Oauth2 resource owner password** - This is a single step process where in client need to send client credentials (client id and client public key) and user credentials (username and password) to '/auth/login-token' API. In this case, in addition to verifying client credentials and user password, system will also check if the user has permission to access APIs via this auth client. Only those auth clients which have associated userids can use this API for authentication.
+- **Oauth2 resource owner password** - This is a single step process where in client need to send client credentials (client id and client public key) and user credentials (username and password) to '/auth/login-token' API. In this case, in addition to verifying client credentials and user password, system will also check if the user has permission to access APIs via this auth client. Only those auth clients which have associated userIds can use this API for authentication.
 
   _Any 3rd party application accessing your APIs will be using this strategy, like from AWS Lambda function._
 

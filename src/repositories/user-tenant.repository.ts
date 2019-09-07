@@ -33,17 +33,17 @@ export class UserTenantRepository extends DefaultSoftCrudRepository<
     super(UserTenant, dataSource);
 
     this.tenant = this.createBelongsToAccessorFor(
-      'tenant_id',
+      'tenantId',
       tenantRepositoryGetter,
     );
 
     this.user = this.createBelongsToAccessorFor(
-      'user_id',
+      'userId',
       userRepositoryGetter,
     );
 
     this.role = this.createBelongsToAccessorFor(
-      'role_id',
+      'roleId',
       roleRepositoryGetter,
     );
   }

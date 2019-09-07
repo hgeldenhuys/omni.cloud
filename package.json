@@ -1,10 +1,10 @@
 {
-  "name": "loopback4-starter",
-  "version": "1.0.1",
-  "description": "A boilerplate starter code base for setting up a loopback4 API for a multi-tenant application",
+  "name": "omni.cloud",
+  "version": "1.0.0",
+  "description": "OmniRule Cloud",
   "keywords": [
-    "loopback-application",
-    "loopback"
+    "omnirule",
+    "rules engine"
   ],
   "main": "index.js",
   "engines": {
@@ -38,7 +38,7 @@
   "repository": {
     "type": "git"
   },
-  "author": "Sourcefuse",
+  "author": "Herman",
   "license": "MIT",
   "files": [
     "README.md",
@@ -69,7 +69,8 @@
     "loopback-connector-postgresql": "^3.7.0",
     "loopback4-authentication": "^2.1.1",
     "loopback4-authorization": "^2.3.2",
-    "loopback4-soft-delete": "^1.2.0"
+    "loopback4-soft-delete": "^1.2.0",
+    "mocha-typescript": "^1.1.17"
   },
   "devDependencies": {
     "@loopback/build": "^2.0.5",

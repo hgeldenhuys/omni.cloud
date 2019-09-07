@@ -31,7 +31,7 @@ export class UserTenantPermissionRepository extends DefaultUserModifyCrudReposit
     super(UserTenantPermission, dataSource, getCurrentUser);
 
     this.userTenant = this.createBelongsToAccessorFor(
-      'user_tenant_id',
+      'user_tenantId',
       utRepositoryGetter,
     );
   }

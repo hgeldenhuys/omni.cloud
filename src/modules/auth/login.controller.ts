@@ -359,7 +359,7 @@ export class LoginController {
           tenantId: user.defaultTenant,
         },
       });
-      if (!userTenant) {
+      if (!userTenant)  {
         throw new HttpErrors.Unauthorized(
           AuthenticateErrorKeys.UserDoesNotExist,
         );

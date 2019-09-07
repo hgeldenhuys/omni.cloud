@@ -1,6 +1,8 @@
 import {Request, RestBindings, get, ResponseObject} from '@loopback/rest';
 import {inject} from '@loopback/context';
 import {authorize} from 'loopback4-authorization';
+import {authenticate, STRATEGY} from 'loopback4-authentication';
+import {PermissionKey} from '../modules/auth/permission-key.enum';
 
 /**
  * OpenAPI response for ping()
@@ -34,8 +36,8 @@ const PING_RESPONSE: ResponseObject = {
 export class PingController {
   constructor(@inject(RestBindings.Http.REQUEST) private req: Request) {}
 
-  // Map to `GET /ping`
-  @authorize(['*'])
+  @authenticate(STRATEGY.BEARER)
+  @authorize([PermissionKey.Ping])
   @get('/ping', {
     responses: {
       '200': PING_RESPONSE,

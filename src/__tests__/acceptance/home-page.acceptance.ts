@@ -1,9 +1,9 @@
 import {Client} from '@loopback/testlab';
-import {Loopback4StarterApplication} from '../..';
+import {OmniCloudApplication} from '../..';
 import {setupApplication} from './test-helper';
 
 describe('HomePage', () => {
-  let app: Loopback4StarterApplication;
+  let app: OmniCloudApplication;
   let client: Client;
 
   before('setupApplication', async () => {

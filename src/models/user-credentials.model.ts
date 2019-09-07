@@ -14,9 +14,9 @@ export class UserCredentials extends BaseEntity {
 
   @belongsTo(
     () => User,
-    {keyFrom: 'user_id', name: 'user_id'},
+    {keyFrom: 'userId', name: 'userId'},
     {
-      name: 'user_id',
+      name: 'userId',
       required: true,
     },
   )

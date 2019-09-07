@@ -25,7 +25,7 @@
 			<column name="deleted" type="bool" jt="-7" mandatory="y" >
 				<defo>false</defo>
 			</column>
-			<column name="user_ids" type="integer[]" length="10" decimal="0" jt="2003" />
+			<column name="userIds" type="integer[]" length="10" decimal="0" jt="2003" />
 			<index name="pk_auth_clients_id" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
@@ -77,7 +77,7 @@
 			<column name="status" type="varchar" length="50" jt="12" mandatory="y" >
 				<defo>&#039;active&#039;::character varying</defo>
 			</column>
-			<index name="pk_tenant_id" unique="PRIMARY_KEY" >
+			<index name="pk_tenantId" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<index name="idx_tenants_created_by" unique="NORMAL" >
@@ -95,7 +95,7 @@
 		</table>
 		<table name="user_credentials" >
 			<column name="id" type="integer" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
-			<column name="user_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="userId" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="auth_provider" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
 			<column name="auth_id" type="varchar" length="100" decimal="0" jt="12" />
 			<column name="auth_token" type="varchar" length="100" decimal="0" jt="12" />
@@ -112,19 +112,19 @@
 			<index name="pk_user_credentials_id" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
-			<index name="idx_user_credentials_user_id" unique="UNIQUE" >
-				<column name="user_id" />
+			<index name="idx_user_credentials_userId" unique="UNIQUE" >
+				<column name="userId" />
 			</index>
 			<index name="idx_user_credentials" unique="NORMAL" >
 				<column name="auth_provider" />
 			</index>
 			<fk name="fk_user_credentials_users" to_schema="lbstarter" to_table="users" >
-				<fk_column name="user_id" pk="id" />
+				<fk_column name="userId" pk="id" />
 			</fk>
 		</table>
 		<table name="user_tenant_permissions" >
 			<column name="id" type="integer" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
-			<column name="user_tenant_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="user_tenantId" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="created_on" type="date" length="13" decimal="0" jt="91" mandatory="y" >
 				<defo>CURRENT_DATE</defo>
 			</column>
@@ -149,8 +149,8 @@
 			<index name="idx_user_tenant_permissions_modified_by" unique="NORMAL" >
 				<column name="modified_by" />
 			</index>
-			<index name="idx_user_tenant_permissions_user_tenant_id" unique="NORMAL" >
-				<column name="user_tenant_id" />
+			<index name="idx_user_tenant_permissions_user_tenantId" unique="NORMAL" >
+				<column name="user_tenantId" />
 			</index>
 			<fk name="fk_created_by" to_schema="lbstarter" to_table="user_tenants" >
 				<fk_column name="created_by" pk="id" />
@@ -159,13 +159,13 @@
 				<fk_column name="modified_by" pk="id" />
 			</fk>
 			<fk name="fk_user_tenant_permissions" to_schema="lbstarter" to_table="user_tenants" >
-				<fk_column name="user_tenant_id" pk="id" />
+				<fk_column name="user_tenantId" pk="id" />
 			</fk>
 		</table>
 		<table name="user_tenants" >
 			<column name="id" type="integer" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
-			<column name="user_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="tenant_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="userId" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="tenantId" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="created_on" type="timestamptz" length="35" decimal="6" jt="93" mandatory="y" >
 				<defo>CURRENT_TIMESTAMP</defo>
 			</column>
@@ -175,37 +175,37 @@
 			<column name="deleted" type="bool" length="1" decimal="0" jt="-7" mandatory="y" >
 				<defo>false</defo>
 			</column>
-			<column name="role_id" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="roleId" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
 			<column name="status" type="varchar" length="50" decimal="0" jt="12" mandatory="y" >
 				<defo>&#039;active&#039;::character varying</defo>
 			</column>
-			<index name="pk_user_tenant_id" unique="PRIMARY_KEY" >
+			<index name="pk_user_tenantId" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
-			<index name="idx_user_tenant_tenant_id" unique="NORMAL" >
-				<column name="tenant_id" />
+			<index name="idx_user_tenant_tenantId" unique="NORMAL" >
+				<column name="tenantId" />
 			</index>
-			<index name="idx_user_tenant_user_id" unique="NORMAL" >
-				<column name="user_id" />
+			<index name="idx_user_tenant_userId" unique="NORMAL" >
+				<column name="userId" />
 			</index>
-			<index name="idx_user_tenants_role_id" unique="NORMAL" >
-				<column name="role_id" />
+			<index name="idx_user_tenants_roleId" unique="NORMAL" >
+				<column name="roleId" />
 			</index>
 			<fk name="fk_user_tenants_roles" to_schema="lbstarter" to_table="roles" >
-				<fk_column name="role_id" pk="id" />
+				<fk_column name="roleId" pk="id" />
 			</fk>
 			<fk name="fk_user_tenant_tenant" to_schema="lbstarter" to_table="tenants" >
-				<fk_column name="tenant_id" pk="id" />
+				<fk_column name="tenantId" pk="id" />
 			</fk>
 			<fk name="fk_user_tenant_user" to_schema="lbstarter" to_table="users" >
-				<fk_column name="user_id" pk="id" />
+				<fk_column name="userId" pk="id" />
 			</fk>
 		</table>
 		<table name="users" >
 			<column name="id" type="integer" length="10" decimal="0" jt="4" mandatory="y" autoincrement="y" />
-			<column name="first_name" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
-			<column name="middle_name" type="varchar" length="50" decimal="0" jt="12" />
-			<column name="last_name" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="firstName" type="varchar" length="50" decimal="0" jt="12" mandatory="y" />
+			<column name="middleName" type="varchar" length="50" decimal="0" jt="12" />
+			<column name="lastName" type="varchar" length="50" decimal="0" jt="12" />
 			<column name="username" type="varchar" length="150" decimal="0" jt="12" mandatory="y" />
 			<column name="email" type="varchar" length="150" decimal="0" jt="12" />
 			<column name="phone" type="varchar" length="15" decimal="0" jt="12" />
@@ -220,9 +220,9 @@
 			<column name="deleted" type="bool" length="1" decimal="0" jt="-7" mandatory="y" >
 				<defo>false</defo>
 			</column>
-			<column name="default_tenant" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
-			<column name="last_login" type="timestamptz" length="35" decimal="6" jt="93" />
-			<index name="pk_user_id" unique="PRIMARY_KEY" >
+			<column name="defaultTenant" type="integer" length="10" decimal="0" jt="4" mandatory="y" />
+			<column name="lastLogin" type="timestamptz" length="35" decimal="6" jt="93" />
+			<index name="pk_userId" unique="PRIMARY_KEY" >
 				<column name="id" />
 			</index>
 			<index name="idx_username" unique="UNIQUE" >
@@ -234,11 +234,11 @@
 			<index name="idx_user_modified_by" unique="NORMAL" >
 				<column name="modified_by" />
 			</index>
-			<index name="idx_users_default_tenant" unique="NORMAL" >
-				<column name="default_tenant" />
+			<index name="idx_users_defaultTenant" unique="NORMAL" >
+				<column name="defaultTenant" />
 			</index>
-			<fk name="fk_users_tenants_default_tenant" to_schema="lbstarter" to_table="tenants" >
-				<fk_column name="default_tenant" pk="id" />
+			<fk name="fk_users_tenants_defaultTenant" to_schema="lbstarter" to_table="tenants" >
+				<fk_column name="defaultTenant" pk="id" />
 			</fk>
 			<fk name="fk_user_user_tenant_created_by" to_schema="lbstarter" to_table="user_tenants" >
 				<fk_column name="created_by" pk="id" />
@@ -295,7 +295,7 @@
 				<defo>&#039;APPLICATION_LOGS&#039;::character varying</defo>
 			</column>
 			<column name="entity_id" type="varchar" decimal="0" jt="12" />
-			<column name="user_id" type="varchar" decimal="0" jt="12" />
+			<column name="userId" type="varchar" decimal="0" jt="12" />
 			<column name="before" type="jsonb" decimal="0" jt="1111" />
 			<column name="after" type="jsonb" decimal="0" jt="1111" />
 			<column name="id" type="integer" jt="4" mandatory="y" autoincrement="y" />
@@ -311,19 +311,19 @@
  LANGUAGE plpgsql
 AS $function$
   DECLARE
-    USER_ID VARCHAR;
+    userId VARCHAR;
     ENTITY_ID VARCHAR;
 BEGIN
 IF TG_OP = 'INSERT'
 THEN
-USER_ID := to_json(NEW)->'created_by';
+userId := to_json(NEW)->'created_by';
 ENTITY_ID := to_json(NEW)->'id';
 INSERT INTO logs.audit_logs (
   operation_name,
   table_name,
   log_type,
   entity_id,
-  user_id,
+  userId,
   after
   )
 VALUES (
@@ -331,13 +331,13 @@ VALUES (
   TG_TABLE_NAME,
   TG_ARGV[0],
   ENTITY_ID,
-  USER_ID,
+  userId,
   to_jsonb(NEW)
   );
 RETURN NEW;
 ELSIF TG_OP = 'UPDATE'
 THEN
-USER_ID := to_json(NEW)->'modified_by';
+userId := to_json(NEW)->'modified_by';
 ENTITY_ID := to_json(NEW)->'id';
 -- IF NEW != OLD THEN
  INSERT INTO logs.audit_logs (
@@ -345,7 +345,7 @@ ENTITY_ID := to_json(NEW)->'id';
    table_name,
    log_type,
    entity_id,
-   user_id,
+   userId,
    before,
    after
    )
@@ -354,7 +354,7 @@ VALUES (
   TG_TABLE_NAME,
   TG_ARGV[0],
   ENTITY_ID,
-  USER_ID,
+  userId,
   to_jsonb(OLD),
   to_jsonb(NEW)
   );
@@ -362,21 +362,21 @@ VALUES (
  RETURN NEW;
 ELSIF TG_OP = 'DELETE'
 THEN
-USER_ID := to_json(OLD)->'modified_by';
+userId := to_json(OLD)->'modified_by';
 ENTITY_ID := to_json(OLD)->'id';
 INSERT INTO logs.audit_logs (
   operation_name,
   table_name,
   log_type,
   entity_id,
-  user_id,
+  userId,
   before)
 VALUES (
   TG_OP,
   TG_TABLE_NAME,
   TG_ARGV[0],
   ENTITY_ID,
-  USER_ID,
+  userId,
   to_jsonb(OLD)
 );
 RETURN OLD;

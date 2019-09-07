@@ -42,6 +42,9 @@ export class UserRepository extends DefaultUserModifyCrudRepository<
   private readonly saltRounds = 10;
 
   async create(entity: DataObject<User>, options?: Options): Promise<User> {
+    const lastentity = await this.findOne({order: ["id DESC"]});
+    const id = lastentity && lastentity.id ? lastentity.id + 1 : 0;
+    entity.id = id;
     const user = await super.create(entity, options);
     try {
       // Add temporary password for first time
@@ -52,17 +55,22 @@ export class UserRepository extends DefaultUserModifyCrudRepository<
       const creds = new UserCredentials({
         authProvider: 'internal',
         password: password,
+        userId: user.id
       });
-      await this.credentials(user.id).create(creds);
+      const credentials = this.credentials(user.id);
+      await credentials.create(creds);
     } catch (err) {
+      console.error(err);
       throw new HttpErrors.UnprocessableEntity('Error while hashing password');
     }
     return user;
   }
 
-  async verifyPassword(username: string, password: string): Promise<User> {
+    async verifyPassword(username: string, password: string): Promise<User> {
     const user = await super.findOne({where: {username}});
     const creds = user && (await this.credentials(user.id).get());
+    if (creds && user) console.log(`${username} ${user.username} ${password} ${creds.password}`);
+    console.log(bcrypt.hashSync(password, 10));
     if (!user || user.deleted || !creds || !creds.password) {
       throw new HttpErrors.Unauthorized(AuthenticateErrorKeys.UserDoesNotExist);
     } else if (!(await bcrypt.compare(password, creds.password))) {

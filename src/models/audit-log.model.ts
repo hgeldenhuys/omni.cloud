@@ -45,7 +45,7 @@ export class AuditLog extends Entity {
 
   @property({
     type: 'string',
-    name: 'user_id',
+    name: 'userId',
   })
   userId?: string;
 

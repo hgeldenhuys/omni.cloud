@@ -1,5 +1,5 @@
 /* Replace with your SQL commands */
-SET search_path TO lbstarter,public;
+SET search_path TO omnicloud,public;
 
 insert into roles
   (id, name, role_key, permissions)
@@ -21,10 +21,10 @@ insert into tenants
 
 /* Password - test123!@# */
 insert into users
-  (id, first_name, last_name, username, password, default_tenant)
+  (id, "firstName", "lastName", username, password, "defaultTenant")
   values
   (1, 'Super', 'Admin', 'super_admin', '$2a$10$TOLMGK43MjbibS8Jap2RXeHl3.4sJcR3eFbms2dBll2LTMggSK9hG', 1);
 insert into user_tenants
-  (user_id, tenant_id, role_id)
+  ("userId", "tenantId", "roleId")
   values
   (1, 1, 1);

@@ -24,4 +24,6 @@ export const enum PermissionKey {
   CreateAudit = 'CreateAudit',
   UpdateAudit = 'UpdateAudit',
   DeleteAudit = 'DeleteAudit',
+
+  Ping = 'Ping',
 }

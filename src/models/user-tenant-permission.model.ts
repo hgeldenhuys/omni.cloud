@@ -17,9 +17,9 @@ export class UserTenantPermission extends UserModifiableEntity
 
   @belongsTo(
     () => UserTenant,
-    {keyFrom: 'user_tenant_id', name: 'user_tenant_id'},
+    {keyFrom: 'user_tenantId', name: 'user_tenantId'},
     {
-      name: 'user_tenant_id',
+      name: 'user_tenantId',
       required: true,
     },
   )
