@@ -65,7 +65,7 @@ export class OmniCloudApplication extends BootMixin(
     });
     dotenvExt.load({
       schema: '.env',
-      errorOnMissing: false,
+      errorOnMissing: true,
     });
     console.log(process.env.DB_HOST);
     console.log(process.env.REDIS_HOST);

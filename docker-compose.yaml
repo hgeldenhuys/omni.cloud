@@ -62,6 +62,7 @@ services:
   nginx:
     image: load-balance-nginx
     container_name: nginx-omni
+    hostname: nginx.dev.intranet
     depends_on:
       - omnirule_db
       - redis

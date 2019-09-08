@@ -1,5 +1,5 @@
 config:
-  target: "http://localhost:8080"
+  target: "http://api.omnirule.io:8100/"
   phases:
     - duration: 10
       arrivalRate: 20
