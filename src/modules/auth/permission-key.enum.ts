@@ -26,4 +26,7 @@ export const enum PermissionKey {
   DeleteAudit = 'DeleteAudit',
 
   Ping = 'Ping',
+
+  // Rules Engine
+  RunEngine = "RunEngine"
 }

@@ -24,12 +24,36 @@ import {
   ResourceOwnerVerifyProvider,
 } from './modules/auth';
 import {MySequence} from './sequence';
+const argv = require('yargs').argv;
 
 export class OmniCloudApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
   constructor(options: ApplicationConfig = {}) {
-    super(options);
+    dotenv.config({
+      path: argv['env'] || '.env'
+    });
+    dotenvExt.load({
+      schema: '.env',
+      errorOnMissing: false,
+    });
+
+    super({
+      ...options,
+      rest: {
+        ...options.rest,
+        host: process.env.HOST,
+        port: process.env.PORT
+      }
+    });
+    this.api({
+      openapi: '3.0.0',
+      info: {
+        title: "Omni-Rule Cloud Server",
+        version: "0.1"
+      },
+      paths: {}
+    });
 
     // Set up the custom sequence
     this.sequence(MySequence);
@@ -83,11 +107,5 @@ export class OmniCloudApplication extends BootMixin(
         nested: true,
       },
     };
-
-    dotenv.config();
-    dotenvExt.load({
-      schema: '.env.example',
-      errorOnMissing: false,
-    });
   }
 }

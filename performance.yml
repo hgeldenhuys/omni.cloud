@@ -1,0 +1,16 @@
+config:
+  target: "http://localhost:8080"
+  phases:
+    - duration: 10
+      arrivalRate: 20
+scenarios:
+  - flow:
+      - post:
+          url: "/run/test/1.1"
+          headers:
+            Content-Type: application/json
+            Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJkZWxldGVkIjpmYWxzZSwiY3JlYXRlZE9uIjoiMjAxOS0wOS0wN1QxODo1MDoyMC45NTVaIiwibW9kaWZpZWRPbiI6IjIwMTktMDktMDdUMTg6NTA6MjAuOTU1WiIsImNyZWF0ZWRCeSI6MSwibW9kaWZpZWRCeSI6MSwiaWQiOjIsImZpcnN0TmFtZSI6Ikhlcm1hbiIsImxhc3ROYW1lIjoiR2VsZGVuaHV5cyIsIm1pZGRsZU5hbWUiOiJIZW5kcmlrIiwidXNlcm5hbWUiOiJoZ2VsZGVuaHV5cyIsImVtYWlsIjoiaGdlbGRlbmh1eXNAZ21haWwuY29tIiwicGhvbmUiOiIrMTUxNDI0MDkyODIiLCJkZWZhdWx0VGVuYW50Ijo0LCJsYXN0TG9naW4iOm51bGwsInBlcm1pc3Npb25zIjpbIlZpZXdPd25Vc2VyIiwiVmlld1RlbmFudCIsIlZpZXdSb2xlIiwiUGluZyIsIlJ1bkVuZ2luZSJdLCJyb2xlIjoiMyIsInRlbmFudCI6eyJkZWxldGVkIjpmYWxzZSwiY3JlYXRlZE9uIjoiMjAxOS0wOS0wN1QxODo0NTowOS4zNzZaIiwibW9kaWZpZWRPbiI6IjIwMTktMDktMDdUMTg6NDU6MDkuMzc2WiIsImNyZWF0ZWRCeSI6MSwibW9kaWZpZWRCeSI6MSwiaWQiOjQsIm5hbWUiOiJBZnJpY2FEaXJlY3QiLCJ0eXBlIjoiYXBwbGljYXRpb24iLCJhZGRyZXNzMSI6IlpBIiwiYWRkcmVzczIiOiJXQyIsImFkZHJlc3MzIjoiQ1BUIiwiYWRkcmVzczQiOiIiLCJjaXR5IjoiQ2FwZSBUb3duIiwic3RhdGUiOiJXZXN0ZXJuIENhcGUiLCJ6aXAiOiIwMTgxIiwiY291bnRyeSI6IlpBIiwic3RhdHVzIjoiYWN0aXZlIn0sImlhdCI6MTU2NzkwNTU4NiwiZXhwIjoxNTcwNDk3NTg2LCJpc3MiOiJsYl9hcGkifQ.kyvg3OhraXrUmCizaB1R6U-wYs5wLxxX106NL6jCeRw
+            Accept: "*/*"
+          json:
+            DebtReviewType: "ApplicantOnly"
+            ApplicantAndSpouse: false
