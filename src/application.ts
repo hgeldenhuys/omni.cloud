@@ -55,6 +55,7 @@ process.on('uncaughtException', exitHandler3);
 // end cleanup
 
 export const argv = require('yargs').argv;
+console.log(argv['env']);
 export class OmniCloudApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
@@ -66,6 +67,8 @@ export class OmniCloudApplication extends BootMixin(
       schema: '.env',
       errorOnMissing: false,
     });
+    console.log(process.env.DB_HOST);
+    console.log(process.env.REDIS_HOST);
 
     super({
       ...options,
