@@ -66,4 +66,4 @@ services:
       - omnirule_db
       - redis
     ports:
-      - 8080:80
+      - 8100:80
