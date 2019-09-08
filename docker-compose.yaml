@@ -29,22 +29,36 @@ services:
     container_name: omni-cloud-1
     depends_on:
       - omnirule_db
-    ports:
-      - 3001:3000
+    #ports:
+    #  - 3001:3000
   omni-cloud2:
     image: omni-cloud
     container_name: omni-cloud-2
     depends_on:
       - omnirule_db
-    ports:
-      - 3002:3000
+    #ports:
+    #  - 3002:3000
   omni-cloud3:
     image: omni-cloud
     container_name: omni-cloud-3
     depends_on:
       - omnirule_db
-    ports:
-      - 3003:3000
+    #ports:
+    #  - 3003:3000
+  omni-cloud4:
+    image: omni-cloud
+    container_name: omni-cloud-4
+    depends_on:
+      - omnirule_db
+    #ports:
+    #  - 3004:3000
+  omni-cloud5:
+    image: omni-cloud
+    container_name: omni-cloud-5
+    depends_on:
+      - omnirule_db
+    #ports:
+    #  - 3005:3000
   nginx:
     image: load-balance-nginx
     container_name: nginx-omni

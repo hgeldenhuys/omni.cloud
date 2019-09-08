@@ -24,8 +24,37 @@ import {
   ResourceOwnerVerifyProvider,
 } from './modules/auth';
 import {MySequence} from './sequence';
-const argv = require('yargs').argv;
 
+// Cleanup code
+type Signals =
+  "SIGABRT" | "SIGALRM" | "SIGBUS" | "SIGCHLD" | "SIGCONT" | "SIGFPE" | "SIGHUP" | "SIGILL" | "SIGINT" | "SIGIO" |
+  "SIGIOT" | "SIGKILL" | "SIGPIPE" | "SIGPOLL" | "SIGPROF" | "SIGPWR" | "SIGQUIT" | "SIGSEGV" | "SIGSTKFLT" |
+  "SIGSTOP" | "SIGSYS" | "SIGTERM" | "SIGTRAP" | "SIGTSTP" | "SIGTTIN" | "SIGTTOU" | "SIGUNUSED" | "SIGURG" |
+  "SIGUSR1" | "SIGUSR2" | "SIGVTALRM" | "SIGWINCH" | "SIGXCPU" | "SIGXFSZ" | "SIGBREAK" | "SIGLOST" | "SIGINFO";
+function exitHandler(exitCode: number) {
+  // if (options.cleanup) console.log('clean');
+  if (exitCode || exitCode === 0) console.log(exitCode);
+  // if (options.exit) process.exit();
+}function exitHandler2(exitCode: Signals) {
+  // if (options.cleanup) console.log('clean');
+  if (exitCode || exitCode === 0) console.log(exitCode);
+  if (exitCode === "SIGINT") process.exit();
+}
+function exitHandler3(error: Error) {
+  // if (options.cleanup) console.log('clean');
+  if (error) console.log(error);
+  // if (options.exit) process.exit();
+}
+
+process.on('beforeExit', exitHandler);
+process.on('SIGINT',  exitHandler2);
+process.on('SIGUSR1', exitHandler2);
+process.on('SIGUSR2', exitHandler2);
+process.on('uncaughtException', exitHandler3);
+
+// end cleanup
+
+export const argv = require('yargs').argv;
 export class OmniCloudApplication extends BootMixin(
   ServiceMixin(RepositoryMixin(RestApplication)),
 ) {
