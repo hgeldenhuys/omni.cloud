@@ -268,7 +268,9 @@ export class LoginController {
     clientId?: string,
     @param.query.string('client_secret')
     clientSecret?: string,
-  ): Promise<void> {}
+  ): Promise<void> {
+    console.log("??");
+  }
 
   @authenticate(
     STRATEGY.GOOGLE_OAUTH2,
@@ -282,12 +284,14 @@ export class LoginController {
       tokenURL: process.env.GOOGLE_AUTH_TOKEN_URL,
     },
     (req: Request) => {
-      return {
+      const result = {
         accessType: 'offline',
         state: Object.keys(req.query)
           .map(key => `${key}=${req.query[key]}`)
           .join('&'),
       };
+      console.log(result);
+      return result;
     },
   )
   @authorize(['*'])
@@ -308,6 +312,7 @@ export class LoginController {
     @param.query.string('state') state: string,
     @inject(RestBindings.Http.RESPONSE) response: Response,
   ): Promise<void> {
+    console.log(`called back`, code, state);
     const clientId = new URLSearchParams(state).get('client_id');
     if (!clientId || !this.user) {
       throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);

@@ -26,6 +26,9 @@ export const enum PermissionKey {
   DeleteAudit = 'DeleteAudit',
 
   Ping = 'Ping',
+  email = "email",
+  profile = "profile",
+  openid = "openid",
 
   // Rules Engine
   RunEngine = "RunEngine"

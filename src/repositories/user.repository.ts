@@ -1,6 +1,6 @@
 import {Getter, inject} from '@loopback/core';
 import {
-  DataObject,
+  DataObject, Filter,
   HasOneRepositoryFactory,
   repository,
 } from '@loopback/repository';
@@ -12,7 +12,7 @@ import {AuthenticationBindings, AuthErrorKeys} from 'loopback4-authentication';
 import {PgdbDataSource} from '../datasources';
 import {User, UserRelations, UserCredentials} from '../models';
 import {AuthUser} from '../modules/auth';
-import {AuthenticateErrorKeys} from '../modules/auth/error-keys';
+import {AuthenticateErrorKeys} from '../modules/auth';
 import {DefaultUserModifyCrudRepository} from './default-user-modify-crud.repository.base';
 import {UserCredentialsRepository} from './user-credentials.repository';
 
@@ -66,7 +66,11 @@ export class UserRepository extends DefaultUserModifyCrudRepository<
     return user;
   }
 
-    async verifyPassword(username: string, password: string): Promise<User> {
+  public findOne(filter?: Filter<User>, options?: Options): Promise<User | null> {
+    return super.findOne(filter, options);
+  }
+
+  async verifyPassword(username: string, password: string): Promise<User> {
     const user = await super.findOne({where: {username}});
     const creds = user && (await this.credentials(user.id).get());
     if (creds && user) console.log(`${username} ${user.username} ${password} ${creds.password}`);

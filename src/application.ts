@@ -120,7 +120,7 @@ export class OmniCloudApplication extends BootMixin(
 
     // Add authorization component
     this.bind(AuthorizationBindings.CONFIG).to({
-      allowAlwaysPaths: ['/explorer'],
+      allowAlwaysPaths: ['/explorer', '/css', '/img', '/vendor'],
     });
     this.component(AuthorizationComponent);
 
