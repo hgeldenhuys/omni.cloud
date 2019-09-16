@@ -8,7 +8,7 @@ import {
   Request,
   requestBody,
   Response,
-  RestBindings,
+  RestBindings
 } from '@loopback/rest';
 import * as crypto from 'crypto';
 import * as jwt from 'jsonwebtoken';
@@ -41,6 +41,7 @@ import {AuthRefreshTokenRequest, AuthTokenRequest, LoginRequest} from './';
 import {AuthenticateErrorKeys} from './error-keys';
 import {AuthUser} from './models/auth-user.model';
 import {TokenResponse} from './models/token-response.dto';
+import {LoginUserRequest} from './models/login-user-request.dto';
 
 export class LoginController {
   // sonarignore_start
@@ -80,9 +81,12 @@ export class LoginController {
   async login(
     @requestBody()
     req: LoginRequest,
+    @inject(RestBindings.Http.REQUEST) request: Request,
   ): Promise<{
     code: string;
   }> {
+    console.log(`request.hostname ${request.hostname}`);
+
     if (!this.client || !this.user) {
       throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
     } else if (!req.client_secret) {
@@ -93,7 +97,7 @@ export class LoginController {
         clientId: req.client_id,
         userId: this.user.id,
       };
-      const token = jwt.sign(codePayload, this.client.secret, {
+      const token = jwt.sign(codePayload, process.env.JWT_SECRET as string, {
         expiresIn: this.client.authCodeExpiration,
         audience: req.client_id,
         subject: req.username,
@@ -107,6 +111,59 @@ export class LoginController {
         AuthErrorKeys.InvalidCredentials,
       );
     }
+  }
+
+  @authenticate(STRATEGY.LOCAL)
+  @authorize(['*'])
+  @post('/auth/login-user', {
+    responses: {
+      [STATUS_CODE.OK]: {
+        description: 'Login',
+        content: {
+          [CONTENT_TYPE.JSON]: Object,
+        },
+      },
+    },
+  })
+  async loginUser(
+    @requestBody()
+    req: LoginUserRequest,
+    @inject(RestBindings.Http.REQUEST) request: Request,
+  ): Promise<{
+    code: string;
+  }> {
+    if (!request.secure) console.warn("Authenticating over non-secure link");
+    const validDomains = ["localhost", "cloud.omnirule.io"];
+    if (validDomains.indexOf(request.hostname) === -1) {
+      console.error(`Invalid domain for request: "${request.hostname}"`);
+      throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
+    }
+    console.log(`request.hostname ${request.hostname}`);
+    return {code: "dummy-token"};
+    // if (!this.client || !this.user) {
+    //   throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
+    // } else if (!req.client_secret) {
+    //   throw new HttpErrors.BadRequest(AuthErrorKeys.ClientSecretMissing);
+    // }
+    // try {
+    //   const codePayload: ClientAuthCode<User> = {
+    //     clientId: req.client_id,
+    //     userId: this.user.id,
+    //   };
+    //   const token = jwt.sign(codePayload, this.client.secret, {
+    //     expiresIn: this.client.authCodeExpiration,
+    //     audience: req.client_id,
+    //     subject: req.username,
+    //     issuer: process.env.JWT_ISSUER,
+    //   });
+    //   return {
+    //     code: token,
+    //   };
+    // } catch (error) {
+    //   throw new HttpErrors.InternalServerError(
+    //     AuthErrorKeys.InvalidCredentials,
+    //   );
+    // }
   }
 
   @authenticateClient(STRATEGY.CLIENT_PASSWORD)
@@ -170,9 +227,10 @@ export class LoginController {
       throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
     }
     try {
+      console.log(`verify1`);
       const payload: ClientAuthCode<User> = jwt.verify(
         req.code,
-        authClient.secret,
+        process.env.JWT_SECRET as string,
         {
           audience: req.clientId,
           subject: req.username,
@@ -327,13 +385,14 @@ export class LoginController {
     }
     try {
       const codePayload: ClientAuthCode<User> = {
+        userId: this.user.id,
         clientId,
         user: this.user,
       };
-      const token = jwt.sign(codePayload, client.secret, {
+      const token = jwt.sign(codePayload, process.env.GOOGLE_AUTH_CLIENT_SECRET as string, {
         expiresIn: client.authCodeExpiration,
         audience: clientId,
-        subject: this.user.username,
+        subject: this.user.email,
         issuer: process.env.JWT_ISSUER,
       });
       response.redirect(`${client.redirectUrl}?code=${token}`);

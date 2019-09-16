@@ -84,7 +84,17 @@ export class OmniCloudApplication extends BootMixin(
         title: "Omni-Rule Cloud Server",
         version: "0.1"
       },
-      paths: {}
+      paths: {},
+      servers: [
+        {
+          description: "test",
+          url: "http://localhost:3000"
+        },
+        {
+          description: "omnirule",
+          url: "https://api.omnirule.io"
+        }
+      ]
     });
 
     // Set up the custom sequence
@@ -139,5 +149,8 @@ export class OmniCloudApplication extends BootMixin(
         nested: true,
       },
     };
+    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
+    // @ts-ignore
+    console.log(`Express: ${JSON.stringify(this.restServer)}`);
   }
 }

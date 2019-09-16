@@ -79,6 +79,8 @@
     "mocha-typescript": "^1.1.17",
     "omni.engine": "^0.0.9",
     "omni.interfaces": "^0.0.22",
+    "simple-google-openid": "^0.3.0",
+    "speakeasy": "^2.0.0",
     "yargs": "^14.0.0"
   },
   "devDependencies": {

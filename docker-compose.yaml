@@ -62,7 +62,9 @@ services:
   nginx:
     image: load-balance-nginx
     container_name: nginx-omni
-    hostname: nginx.dev.intranet
+    environment:
+      NGINX_PORT: 8100
+#    hostname: nginx.dev.intranet
     depends_on:
       - omnirule_db
       - redis
