@@ -67,6 +67,13 @@ export class AuthClient extends BaseEntity implements IAuthClient {
   })
   authCodeExpiration: number;
 
+  @property({
+    type: 'string',
+    required: true,
+    name: 'domain',
+  })
+  domain: string;
+
   constructor(data?: Partial<AuthClient>) {
     super(data);
   }

@@ -54,6 +54,7 @@ export class MySequence implements SequenceHandler {
         request,
       );
       if (!isAccessAllowed) {
+        console.log('NotAllowedAccess');
         throw new HttpErrors.Forbidden(AuthorizeErrorKeys.NotAllowedAccess);
       }
       const result = await this.invoke(route, args);

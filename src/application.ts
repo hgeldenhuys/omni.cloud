@@ -149,8 +149,5 @@ export class OmniCloudApplication extends BootMixin(
         nested: true,
       },
     };
-    // eslint-disable-next-line @typescript-eslint/ban-ts-ignore
-    // @ts-ignore
-    console.log(`Express: ${JSON.stringify(this.restServer)}`);
   }
 }

@@ -10,3 +10,7 @@ export * from './auth-client.model';
 export * from './refresh-token.model';
 export * from './revoked-token.model';
 export * from './user-credentials.model';
+export * from './sts-token-manager.model';
+export * from './provider-datum.model';
+export * from './auth-data.model';
+export * from './omni-token.model';
