@@ -7,3 +7,4 @@ export * from '../modules/auth/login.controller';
 export * from '../modules/auth/logout.controller';
 export * from '../modules/user-tenants/user-tenant.controller';
 export * from './client-login.controller';
+export * from './send-mail.controller';

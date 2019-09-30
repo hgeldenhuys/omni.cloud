@@ -42,10 +42,10 @@ export class User extends UserModifiableEntity implements IAuthUser {
   })
   username: string;
 
-  @property({
-    type: 'string',
-  })
-  email?: string;
+  // @property({
+  //   type: 'string',
+  // })
+  // email?: string;
 
   @property({
     type: 'string',

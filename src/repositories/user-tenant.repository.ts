@@ -26,7 +26,7 @@ export class UserTenantRepository extends DefaultUserModifyCrudRepository<
   constructor(
     @inject('datasources.pgdb') dataSource: PgdbDataSource,
     @inject.getter(AuthenticationBindings.CURRENT_USER)
-      protected readonly getCurrentUser: Getter<AuthUser | undefined>,
+      public readonly getCurrentUser: Getter<AuthUser | undefined>,
     @repository.getter(TenantRepository)
       tenantRepositoryGetter: Getter<TenantRepository>,
     @repository.getter(UserRepository)

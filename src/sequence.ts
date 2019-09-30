@@ -60,6 +60,7 @@ export class MySequence implements SequenceHandler {
       const result = await this.invoke(route, args);
       this.send(response, result);
     } catch (err) {
+      console.error(err);
       this.reject(context, err);
     }
   }

@@ -29,10 +29,11 @@ import {URLSearchParams} from 'url';
 
 import {CONTENT_TYPE} from '../../controllers/content-type.constant';
 import {STATUS_CODE} from '../../controllers/status-codes.enum';
-import {AuthClient, RefreshToken, User} from '../../models';
+import {AuthClient, RefreshToken, TenantTokenStatus, User} from '../../models';
 import {
+  AccountRepository,
   AuthClientRepository,
-  RefreshTokenRepository,
+  RefreshTokenRepository, TenantTokenStatusRepository,
   UserRepository,
   UserTenantPermissionRepository,
   UserTenantRepository,
@@ -62,6 +63,10 @@ export class LoginController {
     public utPermsRepo: UserTenantPermissionRepository,
     @repository(RefreshTokenRepository)
     public refreshTokenRepo: RefreshTokenRepository,
+    @repository(TenantTokenStatusRepository)
+    public tenantTokenStatusRepository: TenantTokenStatusRepository,
+    @repository(AccountRepository)
+    public accountRepository: AccountRepository,
   ) {}
   // sonarignore_end
 
@@ -97,7 +102,7 @@ export class LoginController {
         clientId: req.client_id,
         userId: this.user.id,
       };
-      const token = jwt.sign(codePayload, process.env.JWT_SECRET as string, {
+      const token = jwt.sign(codePayload, req.client_secret, {
         expiresIn: this.client.authCodeExpiration,
         audience: req.client_id,
         subject: req.username,
@@ -230,15 +235,31 @@ export class LoginController {
       console.log(`verify1`);
       const payload: ClientAuthCode<User> = jwt.verify(
         req.code,
-        process.env.JWT_SECRET as string,
+        authClient.clientSecret,
         {
           audience: req.clientId,
           subject: req.username,
           issuer: process.env.JWT_ISSUER,
         },
       ) as ClientAuthCode<User>;
-
-      return await this.createJWT(payload, authClient);
+      const token = await this.createJWT(payload, authClient);
+      const currentUser = await this.userTenantRepo.getCurrentUser();
+      if (currentUser && currentUser.tenant) {
+        if (currentUser.tenant.allowedTokenCalls < 1) {
+          throw new HttpErrors.PreconditionFailed(`No more tokens available for this tenant. [1]`);
+        }
+        let tokenStatus = await this.tenantTokenStatusRepository.get(currentUser.tenant.id+"");
+        if (!tokenStatus) {
+          tokenStatus = new TenantTokenStatus({
+            tenantId: currentUser.tenant.id,
+            tokenCallsRemaining: currentUser.tenant.allowedTokenCalls
+          });
+          await this.tenantTokenStatusRepository.set(currentUser.tenant.id+"", tokenStatus);
+        } else {
+          throw new HttpErrors.PreconditionFailed(`No more tokens available for this tenant. [2]`);
+        }
+      }
+      return token;
     } catch (error) {
       if (error.name === 'TokenExpiredError') {
         throw new HttpErrors.Unauthorized(AuthErrorKeys.CodeExpired);
@@ -375,6 +396,15 @@ export class LoginController {
     if (!clientId || !this.user) {
       throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
     }
+    const account = await this.accountRepository.findOne( {
+      where: {
+        userId: this.user.id,
+        origin: "google"
+      }
+    });
+    if (!account) {
+      throw new HttpErrors.Unauthorized(AuthErrorKeys.ClientInvalid);
+    }
     const client = await this.authClientRepository.findOne({
       where: {
         clientId: clientId,
@@ -392,7 +422,7 @@ export class LoginController {
       const token = jwt.sign(codePayload, process.env.GOOGLE_AUTH_CLIENT_SECRET as string, {
         expiresIn: client.authCodeExpiration,
         audience: clientId,
-        subject: this.user.email,
+        subject: account.email,
         issuer: process.env.JWT_ISSUER,
       });
       response.redirect(`${client.redirectUrl}?code=${token}`);
@@ -464,6 +494,7 @@ export class LoginController {
       );
       return new TokenResponse({accessToken, refreshToken});
     } catch (error) {
+      console.error(error);
       // eslint-disable-next-line no-prototype-builtins
       if (HttpErrors.HttpError.prototype.isPrototypeOf(error)) {
         throw error;

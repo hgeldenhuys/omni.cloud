@@ -42,11 +42,11 @@ export class UserRepository extends DefaultUserModifyCrudRepository<
   private readonly saltRounds = 10;
 
   async create(entity: DataObject<User>, options?: Options): Promise<User> {
-    const lastentity = await this.findOne({order: ["id DESC"]});
-    const id = lastentity && lastentity.id ? lastentity.id + 1 : 0;
-    entity.id = id;
-    const user = await super.create(entity, options);
     try {
+      const lastentity = await this.findOne({order: ["id DESC"]});
+      const id = lastentity && lastentity.id ? lastentity.id + 1 : 0;
+      entity.id = id;
+      const user = await super.create(entity, options);
       // Add temporary password for first time
       const password = await bcrypt.hash(
         process.env.USER_TEMP_PASSWORD,
@@ -59,11 +59,11 @@ export class UserRepository extends DefaultUserModifyCrudRepository<
       });
       const credentials = this.credentials(user.id);
       await credentials.create(creds);
+      return user;
     } catch (err) {
       console.error(err);
-      throw new HttpErrors.UnprocessableEntity('Error while hashing password');
+      throw new HttpErrors.UnprocessableEntity(`Error while creating user: ${err}`);
     }
-    return user;
   }
 
   public findOne(filter?: Filter<User>, options?: Options): Promise<User | null> {
@@ -109,5 +109,32 @@ export class UserRepository extends DefaultUserModifyCrudRepository<
       password: await bcrypt.hash(newPassword, this.saltRounds),
     });
     return user;
+  }
+}
+
+export class UserRepositoryUnsafe extends UserRepository {
+  constructor(
+    @inject('datasources.pgdb') dataSource: PgdbDataSource,
+    @inject.getter(AuthenticationBindings.CURRENT_USER)
+    protected readonly getCurrentUser: Getter<AuthUser | undefined>,
+    @repository.getter('UserCredentialsRepository')
+      getUserCredsRepository: Getter<UserCredentialsRepository>,
+  ) {
+    super(dataSource, () => {return this.getAdmin() || new AuthUser({
+      id: 1
+    })}, getUserCredsRepository);
+  }
+
+  async getAdmin(): Promise<AuthUser> {
+    return (await this.findOne({
+      where: {
+        id: 1
+      }
+    })) as AuthUser
+  }
+  async create(entity: DataObject<User>, options?: Options): Promise<User> {
+    // @ts-ignore
+    this.getCurrentUser = this.getAdmin;
+    return super.create(entity, options);
   }
 }

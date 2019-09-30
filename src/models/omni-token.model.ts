@@ -27,6 +27,11 @@ export class OmniToken extends Entity {
   })
   error?: string;
 
+  @property({
+    type: 'string',
+  })
+  permissions?: string;
+
   constructor(data?: Partial<OmniToken>) {
     super(data);
   }

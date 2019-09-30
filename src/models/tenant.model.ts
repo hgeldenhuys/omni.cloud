@@ -72,6 +72,13 @@ export class Tenant extends UserModifiableEntity {
   })
   status: string;
 
+  @property({
+    type: 'number',
+    default: 100,
+    name: "allowedTokenCalls"
+  })
+  allowedTokenCalls: number;
+
   constructor(data?: Partial<Tenant>) {
     super(data);
   }

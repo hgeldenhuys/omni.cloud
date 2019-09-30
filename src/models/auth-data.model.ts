@@ -1,7 +1,7 @@
 import {Entity, model, property} from '@loopback/repository';
 import {AuthDataInterface} from '../interfaces/AuthDataInterface';
 import {ProviderDatum} from './provider-datum.model';
-import {StsTokenManager} from '../../dist/models';
+import {StsTokenManager} from './sts-token-manager.model';
 
 @model({settings: {}})
 export class AuthData extends Entity implements AuthDataInterface {
@@ -37,7 +37,7 @@ export class AuthData extends Entity implements AuthDataInterface {
   @property({
     type: 'string',
     required: false,
-    nullable: true
+    jsonSchema: {nullable: true}
   })
   phoneNumber?: string | null;
 
@@ -48,6 +48,7 @@ export class AuthData extends Entity implements AuthDataInterface {
 
   @property({
     type: 'string',
+    jsonSchema: {nullable: true}
   })
   tenantId?: string;
 
@@ -79,6 +80,7 @@ export class AuthData extends Entity implements AuthDataInterface {
 
   @property({
     type: 'string',
+    jsonSchema: {nullable: true}
   })
   redirectEventId?: string;
 

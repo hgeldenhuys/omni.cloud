@@ -4,8 +4,9 @@ import {Request, Response} from 'express';
 import {AuthData, OmniToken, User} from '../models';
 import {authorize, UserPermissionsFn} from 'loopback4-authorization';
 import {
+  AccountRepository,
   AuthClientRepository, RefreshTokenRepository,
-  TenantRepository,
+  TenantRepository, TenantTokenStatusRepository,
   UserRepository,
   UserTenantPermissionRepository,
   UserTenantRepository,
@@ -28,6 +29,8 @@ export class ClientLoginController {
     @repository(UserTenantRepository) public userTenantRepository: UserTenantRepository,
     @repository(UserTenantPermissionRepository) public userTenantPermissionRepository: UserTenantPermissionRepository,
     @repository(RefreshTokenRepository) public refreshTokenRepository: RefreshTokenRepository,
+    @repository(TenantTokenStatusRepository) public tenantTokenStatusRepository: TenantTokenStatusRepository,
+    @repository(AccountRepository) public accountRepository: AccountRepository,
   ) {
   }
 
@@ -70,19 +73,30 @@ export class ClientLoginController {
         });
       console.log(`Google response: `, JSON.stringify(response, undefined, 2));
     }
-
-    const user = await this.userRepository.findOne({
-      where: {
-        email: authData.email
-      }
-    }) as AuthUser;
     const omniToken: OmniToken = new OmniToken({
       accessToken: "dummy",
       photoUrl: authData.photoURL,
       displayName: authData.displayName
     });
+
+    const account = await this.accountRepository.findOne({
+      where: {
+        email: authData.email
+      }
+    });
+
+    if (!account) {
+      omniToken.error = `No account found with email ${authData.email}`;
+      return omniToken;
+    }
+    const user = await this.userRepository.findOne({
+      where: {
+        id: account.userId
+      }
+    }) as AuthUser;
+
     if (user) {
-      omniToken.email = user.email;
+      omniToken.email = account.email;
       const authClient = await this.authClientRepository.findOne({
         where: {
           domain: domain
@@ -113,15 +127,23 @@ export class ClientLoginController {
                   PermissionKey.RunEngine
                 ]
               };
-              const loginController = new LoginController(authClient, user, userPermissionsFn, this.authClientRepository, this.userRepository, this.userTenantRepository, this.userTenantPermissionRepository, this.refreshTokenRepository);
+              omniToken.permissions = userPermissionsFn([], []).join(',');
+              const loginController = new LoginController(authClient, user, userPermissionsFn,
+                this.authClientRepository,
+                this.userRepository,
+                this.userTenantRepository,
+                this.userTenantPermissionRepository,
+                this.refreshTokenRepository,
+                this.tenantTokenStatusRepository,
+                this.accountRepository);
               const codePayload: ClientAuthCode<User> = {
                 clientId: authClient.clientId,
                 userId: user.id,
               };
-              const code = jwt.sign(codePayload, process.env.JWT_SECRET as string, {
+              const code = jwt.sign(codePayload, authClient.clientSecret, {
                 expiresIn: authData.stsTokenManager.expirationTime,
                 audience: authClient.clientId,
-                subject: user.email,
+                subject: account.email,
                 issuer: process.env.JWT_ISSUER,
               });
               const authTokenRequest = new AuthTokenRequest({

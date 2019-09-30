@@ -10,3 +10,6 @@ export * from './auth-client.repository';
 export * from './revoked-token.repository';
 export * from './user-credentials.repository';
 export * from './rules-engine.repository';
+export * from './tenant-token-status.repository';
+export * from './account.repository';
+export * from './registration-link.repository';
