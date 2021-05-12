@@ -88,7 +88,7 @@
     "loopback4-authorization": "^2.3.2",
     "loopback4-soft-delete": "^1.2.0",
     "mocha-typescript": "^1.1.17",
-    "nodemailer": "^6.3.0",
+    "nodemailer": "^6.4.16",
     "oidc-provider": "^6.12.1",
     "omni.engine": "^0.0.9",
     "omni.interfaces": "^0.0.22",
